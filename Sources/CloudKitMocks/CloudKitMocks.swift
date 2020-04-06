@@ -1,6 +1,6 @@
 //
 //  CloudKitMocks.swift
-//  CloudKitStorageHelpersTests
+//  CloudKitMock
 //
 //  Created by James Robinson on 3/5/20.
 //
@@ -12,20 +12,36 @@ import CloudStorage
 import CloudKitStorageHelpers
 
 @available(OSX 10.12, iOS 10.0, tvOS 10.0, *)
-struct UploadableThing: Uploadable, Equatable {
-    var payload: Data? = Data(repeating: 5, count: 64)
-    var metadata: DownloadableThing
+public struct UploadableThing: Uploadable, Equatable {
+    
+    public init(payload: Data? = Data(repeating: 5, count: 64),
+                  metadata: DownloadableThing) {
+        self.payload = payload
+        self.metadata = metadata
+    }
+    
+    public var payload: Data?
+    public var metadata: DownloadableThing
+    
 }
 
 @available(OSX 10.12, iOS 10.0, tvOS 10.0, *)
-final class DownloadableThing: Downloadable, Equatable {
+public final class DownloadableThing: Downloadable, Equatable {
     
-    var recordIdentifier = UUID()
-    var id = UUID()
-    var fileExtension: String? = "testfile"
-    lazy var storage: UploadableThing? = UploadableThing(metadata: self)
+    public init(recordIdentifier: UUID = UUID(),
+                id: UUID = UUID(),
+                fileExtension: String? = "testfile") {
+        self.recordIdentifier = recordIdentifier
+        self.id = id
+        self.fileExtension = fileExtension
+    }
     
-    static func == (lhs: DownloadableThing, rhs: DownloadableThing) -> Bool {
+    public var recordIdentifier: UUID
+    public var id: UUID
+    public var fileExtension: String?
+    public lazy var storage: UploadableThing? = UploadableThing(metadata: self)
+    
+    public static func == (lhs: DownloadableThing, rhs: DownloadableThing) -> Bool {
         return lhs.storage == rhs.storage &&
             lhs.fileExtension == rhs.fileExtension &&
             lhs.id == rhs.id &&
@@ -36,18 +52,18 @@ final class DownloadableThing: Downloadable, Equatable {
 
 @available(OSX 10.12, iOS 10.0, tvOS 10.0, *)
 extension UploadableThing: CloudKitUploadable {
-    static var recordType: CKRecord.RecordType { "UploadableThing" }
+    public static var recordType: CKRecord.RecordType { "UploadableThing" }
 }
 
 @available(OSX 10.12, iOS 10.0, tvOS 10.0, *)
 extension DownloadableThing: CloudKitDownloadable {
-    typealias ContainerType = CloudKitMockContainer
+    public typealias ContainerType = CloudKitMockContainer
     
-    var recordID: CKRecord.ID {
+    public var recordID: CKRecord.ID {
         CKRecord.ID(recordName: id.uuidString, zoneID: Self.zoneID)
     }
     
-    static var zoneID: CKRecordZone.ID {
+    public static var zoneID: CKRecordZone.ID {
         CKRecordZone.ID(zoneName: "UploadableThings", ownerName: CKCurrentUserDefaultName)
     }
 }
@@ -55,23 +71,23 @@ extension DownloadableThing: CloudKitDownloadable {
 // MARK: - Mocks
 
 @available(OSX 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *)
-enum CloudKitMock {
-    static var currentUserID: String?
-    static var defaultContainer = CloudKitMockContainer()
+public final class CloudKitMock {
+    public static var currentUserID: String?
+    public static var defaultContainer = CloudKitMockContainer()
 }
 
 @available(OSX 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *)
-final class CloudKitMockContainer: CloudKitContainer {
-    typealias Database = CloudKitMockDatabase
-    typealias DefaultType = CloudKitMockContainer
+public final class CloudKitMockContainer: CloudKitContainer {
+    public typealias Database = CloudKitMockDatabase
+    public typealias DefaultType = CloudKitMockContainer
     
-    static func `default`() -> CloudKitMockContainer {
+    public static func `default`() -> CloudKitMockContainer {
         return CloudKitMock.defaultContainer
     }
     
     private static var databases = [CKDatabase.Scope: CloudKitMockDatabase]()
     
-    func database(with databaseScope: CKDatabase.Scope) -> CloudKitMockDatabase {
+    public func database(with databaseScope: CKDatabase.Scope) -> CloudKitMockDatabase {
         if let db = Self.databases[databaseScope] {
             return db
         }
@@ -79,7 +95,7 @@ final class CloudKitMockContainer: CloudKitContainer {
         return Self.databases[databaseScope]!
     }
     
-    func wipe() {
+    public func wipe() {
         Self.databases.forEach { $0.value.wipe() }
         Self.databases.removeAll()
     }
@@ -97,16 +113,16 @@ private struct RecordIdentifier: Hashable {
 
 /// A mock for a CloudKit database.
 @available(OSX 10.12, iOS 10.0, tvOS 10.0, *)
-final class CloudKitMockDatabase: CloudKitDatabase {
+public final class CloudKitMockDatabase: CloudKitDatabase {
     
-    typealias FetchOperationType = CloudKitMockFetch
-    typealias PushOperationType = CloudKitMockPush
-    typealias DeleteOperationType = CloudKitMockPush
+    public typealias FetchOperationType = CloudKitMockFetch
+    public typealias PushOperationType = CloudKitMockPush
+    public typealias DeleteOperationType = CloudKitMockPush
     
-    let scope: CKDatabase.Scope
+    public let scope: CKDatabase.Scope
     private var uploadedData = [RecordIdentifier: CKRecord]()
     
-    init(scope: CKDatabase.Scope) {
+    public init(scope: CKDatabase.Scope) {
         self.scope = scope
     }
     
@@ -126,7 +142,7 @@ final class CloudKitMockDatabase: CloudKitDatabase {
             .appendingPathComponent(scopeDescription, isDirectory: true)
     }
     
-    func wipe() {
+    public func wipe() {
         uploadedData.removeAll()
         try? FileManager.default.removeItem(at: assetStorageDir)
     }
@@ -137,7 +153,7 @@ final class CloudKitMockDatabase: CloudKitDatabase {
         }
     }
     
-    func pushRecord(_ record: CKRecord) throws {
+    public func pushRecord(_ record: CKRecord) throws {
         try assertAuthenticated()
         let id = RecordIdentifier(for: record)
         uploadedData[id] = record
@@ -145,7 +161,7 @@ final class CloudKitMockDatabase: CloudKitDatabase {
             try record.assets().store(in: assetStorageDir)
     }
     
-    func fetchRecord(withID recordID: CKRecord.ID) throws -> CKRecord? {
+    public func fetchRecord(withID recordID: CKRecord.ID) throws -> CKRecord? {
         try assertAuthenticated()
         guard let id = uploadedData.keys.first(where: { $0.id == recordID }) else {
             throw CKError(.unknownItem)
@@ -156,7 +172,7 @@ final class CloudKitMockDatabase: CloudKitDatabase {
         return record
     }
     
-    func deleteRecord(withID recordID: CKRecord.ID) throws {
+    public func deleteRecord(withID recordID: CKRecord.ID) throws {
         try assertAuthenticated()
         guard let id = uploadedData.keys.first(where: { $0.id == recordID }) else {
             throw CKError(.unknownItem)
@@ -179,7 +195,7 @@ final class CloudKitMockDatabase: CloudKitDatabase {
         }
     }
     
-    func addOperation(_ operation: CloudKitOperation) {
+    public func addOperation(_ operation: CloudKitOperation) {
         guard let op = operation as? CloudKitMockOperation else { return }
         op.database = self
         op.start()
@@ -187,19 +203,19 @@ final class CloudKitMockDatabase: CloudKitDatabase {
 }
 
 @available(OSX 10.12, iOS 10.0, tvOS 10.0, *)
-class CloudKitMockOperation: CloudKitOperation {
+public class CloudKitMockOperation: CloudKitOperation {
     
-    var database: CloudKitMockDatabase?
-    private(set) var isRunning: Bool = false
-    private(set) var isCancelled: Bool = false
+    public var database: CloudKitMockDatabase?
+    public private(set) var isRunning: Bool = false
+    public private(set) var isCancelled: Bool = false
     
-    func start() {
+    public func start() {
         guard !isRunning else { return }
         isRunning = true
         isCancelled = false
     }
     
-    func cancel() {
+    public func cancel() {
         isRunning = false
         isCancelled = true
     }
@@ -208,17 +224,17 @@ class CloudKitMockOperation: CloudKitOperation {
 
 
 @available(OSX 10.12, iOS 10.0, tvOS 10.0, *)
-final class CloudKitMockFetch: CloudKitMockOperation, CloudKitFetchRecordsOperation {
+public final class CloudKitMockFetch: CloudKitMockOperation, CloudKitFetchRecordsOperation {
     
-    var delay: TimeInterval = 1
-    var fetchError: Error?
+    public var delay: TimeInterval = 1
+    public var fetchError: Error?
     
-    var perRecordProgressBlock: ((CKRecord.ID, Double) -> Void)?
-    var perRecordCompletionBlock: ((CKRecord?, CKRecord.ID?, Error?) -> Void)?
-    var fetchRecordsCompletionBlock: (([CKRecord.ID : CKRecord]?, Error?) -> Void)?
-    var recordIDs: [CKRecord.ID]
+    public var perRecordProgressBlock: ((CKRecord.ID, Double) -> Void)?
+    public var perRecordCompletionBlock: ((CKRecord?, CKRecord.ID?, Error?) -> Void)?
+    public var fetchRecordsCompletionBlock: (([CKRecord.ID : CKRecord]?, Error?) -> Void)?
+    public var recordIDs: [CKRecord.ID]
     
-    init(recordIDs: [CKRecord.ID]) {
+    public init(recordIDs: [CKRecord.ID]) {
         self.recordIDs = recordIDs
     }
     
@@ -236,7 +252,7 @@ final class CloudKitMockFetch: CloudKitMockOperation, CloudKitFetchRecordsOperat
         }
     }
     
-    override func start() {
+    public override func start() {
         super.start()
         self.workingRecord = recordIDs.first
         if let error = fetchError {
@@ -246,7 +262,7 @@ final class CloudKitMockFetch: CloudKitMockOperation, CloudKitFetchRecordsOperat
         }
     }
     
-    func simulateFailure(delay seconds: TimeInterval = 0, error: Error) {
+    public func simulateFailure(delay seconds: TimeInterval = 0, error: Error) {
         let progressItemCount = seconds > 0
             ? 3 // Do 3 things first
             : 0 // Just get on with it
@@ -286,7 +302,7 @@ final class CloudKitMockFetch: CloudKitMockOperation, CloudKitFetchRecordsOperat
         }
     }
     
-    func simulateFetch(completionDelay seconds: TimeInterval = 0) {
+    public func simulateFetch(completionDelay seconds: TimeInterval = 0) {
         let progressItemCount = seconds > 0
             ? 3 // Do 3 things first
             : 0 // Just get on with it
@@ -354,21 +370,21 @@ final class CloudKitMockFetch: CloudKitMockOperation, CloudKitFetchRecordsOperat
 }
 
 @available(OSX 10.12, iOS 10.0, tvOS 10.0, *)
-final class CloudKitMockPush: CloudKitMockOperation, CloudKitModifyRecordsOperation {
+public final class CloudKitMockPush: CloudKitMockOperation, CloudKitModifyRecordsOperation {
     
-    var delay: TimeInterval = 0
-    var pushError: Error?
+    public var delay: TimeInterval = 0
+    public var pushError: Error?
     
-    var recordsToSave: [CKRecord]?
-    var recordIDsToDelete: [CKRecord.ID]?
+    public var recordsToSave: [CKRecord]?
+    public var recordIDsToDelete: [CKRecord.ID]?
     
-    var perRecordProgressBlock: ((CKRecord, Double) -> Void)?
-    var perRecordCompletionBlock: ((CKRecord, Error?) -> Void)?
-    var modifyRecordsCompletionBlock: (([CKRecord]?, [CKRecord.ID]?, Error?) -> Void)?
-    var savePolicy: CKModifyRecordsOperation.RecordSavePolicy = .ifServerRecordUnchanged
-    var qualityOfService: QualityOfService = .default
+    public var perRecordProgressBlock: ((CKRecord, Double) -> Void)?
+    public var perRecordCompletionBlock: ((CKRecord, Error?) -> Void)?
+    public var modifyRecordsCompletionBlock: (([CKRecord]?, [CKRecord.ID]?, Error?) -> Void)?
+    public var savePolicy: CKModifyRecordsOperation.RecordSavePolicy = .ifServerRecordUnchanged
+    public var qualityOfService: QualityOfService = .default
     
-    override init() {
+    public override init() {
         super.init()
     }
     
@@ -392,7 +408,7 @@ final class CloudKitMockPush: CloudKitMockOperation, CloudKitModifyRecordsOperat
         }
     }
     
-    override func start() {
+    public override func start() {
         super.start()
         self.workingRecord = recordsToSave?.first?.recordID
         if let error = pushError {
@@ -402,7 +418,7 @@ final class CloudKitMockPush: CloudKitMockOperation, CloudKitModifyRecordsOperat
         }
     }
     
-    func simulateFailure(delay seconds: TimeInterval = 0, error: Error) {
+    public func simulateFailure(delay seconds: TimeInterval = 0, error: Error) {
         let progressItemCount = seconds > 0
             ? 3 // Do 3 things first
             : 0 // Just get on with it
@@ -445,7 +461,7 @@ final class CloudKitMockPush: CloudKitMockOperation, CloudKitModifyRecordsOperat
         }
     }
     
-    func simulatePush(completionDelay seconds: TimeInterval = 0) {
+    public func simulatePush(completionDelay seconds: TimeInterval = 0) {
         let progressItemCount = seconds > 0
             ? 3 // Do 3 things first
             : 0 // Just get on with it

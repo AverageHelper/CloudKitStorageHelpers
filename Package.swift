@@ -7,17 +7,31 @@ let package = Package(
     products: [
         .library(
             name: "CloudKitStorageHelpers",
-            targets: ["CloudKitStorageHelpers"]),
+            targets: ["CloudKitStorageHelpers"]
+        ),
+        .library(
+            name: "CloudKitMocks",
+            targets: ["CloudKitMocks"]
+        ),
     ],
     dependencies: [
-        .package(name: "CloudStorage", url: "https://github.com/AverageHelper/CloudStorage.git", .upToNextMinor(from: "0.1.0")),
+        .package(name: "CloudStorage",
+                 url: "https://github.com/AverageHelper/CloudStorage.git",
+                 .upToNextMinor(from: "0.1.0")
+        ),
     ],
     targets: [
         .target(
             name: "CloudKitStorageHelpers",
-            dependencies: ["CloudStorage"]),
+            dependencies: ["CloudStorage"]
+        ),
+        .target(
+            name: "CloudKitMocks",
+            dependencies: ["CloudStorage", "CloudKitStorageHelpers"]
+        ),
         .testTarget(
             name: "CloudKitStorageHelpersTests",
-            dependencies: ["CloudKitStorageHelpers"]),
+            dependencies: ["CloudKitStorageHelpers", "CloudKitMocks"]
+        ),
     ]
 )
