@@ -5,7 +5,6 @@
 //  Created by James Robinson on 2/8/20.
 //
 
-#if canImport(Combine) && canImport(CryptoKit) && canImport(CloudKit)
 import Foundation
 import CloudKit
 import Combine
@@ -450,4 +449,3 @@ extension CloudKitModifyRecordsOperation {
 
 @available(watchOS 3.0, *)
 extension CKModifyRecordsOperation: CloudKitModifyRecordsOperation {}
-#endif

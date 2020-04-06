@@ -5,7 +5,6 @@
 //  Created by James Robinson on 3/4/20.
 //
 
-#if canImport(Combine) && canImport(CryptoKit) && canImport(CloudKit)
 import Foundation
 import Combine
 import CryptoKit
@@ -444,4 +443,3 @@ public protocol CloudKitFetchRecordsOperation: CloudKitOperation {
 
 @available(watchOS 3.0, *)
 extension CKFetchRecordsOperation: CloudKitFetchRecordsOperation {}
-#endif

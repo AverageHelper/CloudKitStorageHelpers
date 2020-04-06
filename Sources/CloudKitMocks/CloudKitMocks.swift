@@ -1,11 +1,10 @@
 //
 //  CloudKitMocks.swift
-//  CloudKitMock
+//  CloudKitMocks
 //
 //  Created by James Robinson on 3/5/20.
 //
 
-#if canImport(Combine) && canImport(CryptoKit)
 import Foundation
 import CloudKit
 import CloudStorage
@@ -15,7 +14,7 @@ import CloudKitStorageHelpers
 public struct UploadableThing: Uploadable, Equatable {
     
     public init(payload: Data? = Data(repeating: 5, count: 64),
-                  metadata: DownloadableThing) {
+                metadata: DownloadableThing) {
         self.payload = payload
         self.metadata = metadata
     }
@@ -560,4 +559,3 @@ private extension Dictionary where Key == String, Value == URL {
     }
     
 }
-#endif
