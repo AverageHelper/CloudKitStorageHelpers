@@ -186,11 +186,7 @@ public final class CloudKitMockDatabase: CloudKitDatabase {
                 try FileManager.default.removeItem(at: fileURL)
             } catch {
                 print("[CloudKitMockDatabase] Failed to delete mock asset data at \(fileURL): \(error)")
-                if #available(OSX 10.13, iOS 11.3, tvOS 11.3, *) {
-                    throw CKError(.assetNotAvailable)
-                } else {
-                    throw CKError(.assetFileNotFound)
-                }
+                throw CKError(.assetNotAvailable)
             }
         }
     }

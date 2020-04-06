@@ -4,6 +4,12 @@ import PackageDescription
 
 let package = Package(
     name: "CloudKitStorageHelpers",
+    platforms: [
+        .macOS(.v10_15),
+        .iOS(.v13),
+        .tvOS(.v13),
+        .watchOS(.v6),
+    ],
     products: [
         .library(
             name: "CloudKitStorageHelpers",
@@ -15,9 +21,10 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "CloudStorage",
-                 url: "https://github.com/AverageHelper/CloudStorage.git",
-                 .upToNextMinor(from: "0.1.0")
+        .package(
+            name: "CloudStorage",
+            url: "https://github.com/AverageHelper/CloudStorage.git",
+            .upToNextMinor(from: "0.1.0")
         ),
     ],
     targets: [
