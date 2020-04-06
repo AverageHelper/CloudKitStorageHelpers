@@ -3,7 +3,6 @@
 //  Final Finance
 //
 //  Created by James Robinson on 2/8/20.
-//  Copyright © 2020 LeadDev Creations, LLC. All rights reserved.
 //
 
 #if canImport(Combine) && canImport(CryptoKit) && canImport(CloudKit)

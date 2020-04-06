@@ -3,7 +3,6 @@
 //  CloudStorage
 //
 //  Created by James Robinson on 3/4/20.
-//  Copyright © 2020 LeadDev Creations, LLC. All rights reserved.
 //
 
 #if canImport(Combine) && canImport(CryptoKit) && canImport(CloudKit)
