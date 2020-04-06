@@ -10,7 +10,7 @@ let package = Package(
             targets: ["CloudKitStorageHelpers"]),
     ],
     dependencies: [
-        .package(name: "CloudStorage", url: "https://github.com/AverageHelper/CloudStorage.git", .upToNextMinor(from: "0.0.3")),
+        .package(name: "CloudStorage", url: "https://github.com/AverageHelper/CloudStorage.git", .upToNextMinor(from: "0.1.0")),
     ],
     targets: [
         .target(
