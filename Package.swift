@@ -15,10 +15,6 @@ let package = Package(
             name: "CloudKitStorageHelpers",
             targets: ["CloudKitStorageHelpers"]
         ),
-        .library(
-            name: "CloudKitMocks",
-            targets: ["CloudKitMocks"]
-        ),
     ],
     dependencies: [
         .package(
