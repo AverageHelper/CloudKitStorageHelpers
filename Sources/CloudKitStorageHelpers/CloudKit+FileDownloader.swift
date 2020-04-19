@@ -11,7 +11,6 @@ import CryptoKit
 import CloudKit
 import CloudStorage
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 extension DownloadError {
     
     public init(error: CKError) {
@@ -73,7 +72,6 @@ extension DownloadError {
 
 // MARK: Publisher
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public final class CloudKitFileDownloader<Downloadable>: FileDownloader where Downloadable: CloudKitDownloadable {
     
     public static func downloadFile(_ file: Downloadable,
@@ -125,7 +123,6 @@ public final class CloudKitFileDownloader<Downloadable>: FileDownloader where Do
     
 }
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public final class CloudKitFileDeleter<Deletable>: FileDeleter where Deletable: CloudKitDownloadable {
     
     public let recordID: CKRecord.ID
@@ -147,7 +144,6 @@ public final class CloudKitFileDeleter<Deletable>: FileDeleter where Deletable: 
 
 // MARK: Download Subscription
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public final class CloudKitDownloadSubscription<SubscriberType, ContainerType>: Subscription
     where SubscriberType: Subscriber,
     DownloadError == SubscriberType.Failure,
@@ -318,7 +314,6 @@ public final class CloudKitDownloadSubscription<SubscriberType, ContainerType>: 
 
 // MARK: Deletion Subscription
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public final class CloudKitDeletionSubscription<SubscriberType, ContainerType>: Subscription
     where SubscriberType: Subscriber,
     DownloadError == SubscriberType.Failure,
@@ -413,7 +408,6 @@ public final class CloudKitDeletionSubscription<SubscriberType, ContainerType>: 
 
 /// A type that conforms to this protocol may be used by `CloudKitFileDownloader`s
 /// to retrieve data from CloudKit.
-@available(watchOS 3.0, *)
 public protocol CloudKitDownloadable: Downloadable {
     /// The type of CloudKit container to use.  Use `CKContainer` for normal CloudKit capabilities.
     associatedtype ContainerType: CloudKitContainer
@@ -430,7 +424,6 @@ extension String {
 
 // MARK: Fetch Operation
 
-@available(watchOS 3.0, *)
 public protocol CloudKitFetchRecordsOperation: CloudKitOperation {
     
     init(recordIDs: [CKRecord.ID])
@@ -441,5 +434,4 @@ public protocol CloudKitFetchRecordsOperation: CloudKitOperation {
     
 }
 
-@available(watchOS 3.0, *)
 extension CKFetchRecordsOperation: CloudKitFetchRecordsOperation {}

@@ -25,7 +25,7 @@ let package = Package(
         .package(
             name: "CloudKitMocks",
             url: "https://github.com/AverageHelper/CloudKitMocks.git",
-            .upToNextMinor(from: "0.1.0")
+            .upToNextMinor(from: "0.2.2")
         ),
     ],
     targets: [

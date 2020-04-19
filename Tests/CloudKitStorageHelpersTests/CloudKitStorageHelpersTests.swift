@@ -6,7 +6,6 @@ import CloudKitMocks
 import CloudStorage
 import CloudKitStorageHelpers
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, *)
 final class CloudKitStorageHelpersTests: XCTestCase {
     
     static var allTests: [(String, (CloudKitStorageHelpersTests) -> () throws -> ())] = [

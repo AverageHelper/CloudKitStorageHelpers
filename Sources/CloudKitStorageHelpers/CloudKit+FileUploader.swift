@@ -11,7 +11,6 @@ import Combine
 import CryptoKit
 import CloudStorage
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 extension UploadError {
     
     public init(error: CKError) {
@@ -78,7 +77,6 @@ extension UploadError {
     
 }
 
-@available(watchOS 3.0, *)
 extension CKError {
     
     public var recordZoneName: String? {
@@ -90,7 +88,6 @@ extension CKError {
     
 }
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public final class CloudKitFileUploader<Uploadable>: FileUploader where Uploadable: CloudKitUploadable {
     
     public static func uploadFile(_ file: Uploadable,
@@ -119,7 +116,6 @@ public final class CloudKitFileUploader<Uploadable>: FileUploader where Uploadab
     
 }
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 final class CloudKitUploadSubscription<SubscriberType, Uploadable>: Subscription
     where SubscriberType: Subscriber,
     UploadError == SubscriberType.Failure,
@@ -269,18 +265,15 @@ final class CloudKitUploadSubscription<SubscriberType, Uploadable>: Subscription
     
 }
 
-@available(watchOS 3.0, *)
 extension CKRecordZone.ID {
     
     /// The zone in which file attachments are kept.
-    @available(OSX 10.12, iOS 10.0, tvOS 10.0, *)
     public static var defaultAttachmentsZone: CKRecordZone.ID {
         CKRecordZone.ID(zoneName: "Attachments", ownerName: CKCurrentUserDefaultName)
     }
     
 }
 
-@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 private extension CKRecord {
     
     /// A `CKRecord` to use when uploading the file data.
@@ -327,12 +320,10 @@ private extension CKRecord {
 
 // MARK: Uploadable
 
-@available(watchOS 3.0, *)
 public protocol CloudKitUploadable: Uploadable where Metadata: CloudKitDownloadable {
     static var recordType: CKRecord.RecordType { get }
 }
 
-@available(watchOS 3.0, *)
 extension CloudKitUploadable {
     public typealias ContainerType = Metadata.ContainerType
     public var recordID: CKRecord.ID { metadata.recordID }
@@ -340,23 +331,19 @@ extension CloudKitUploadable {
 
 // MARK: Container
 
-@available(watchOS 3.0, *)
 public protocol CloudKitContainer: AnyObject where Self == DefaultType {
     associatedtype Database: CloudKitDatabase
     associatedtype DefaultType: CloudKitContainer
     static func `default`() -> DefaultType
-    @available(OSX 10.12, iOS 10.0, tvOS 10.0, *)
     func database(with databaseScope: CKDatabase.Scope) -> Database
 }
 
-@available(OSX 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *)
 extension CloudKitContainer {
     public var privateCloudDatabase: Database { database(with: .private) }
     public var publicCloudDatabase: Database { database(with: .public) }
     public var sharedCloudDatabase: Database { database(with: .shared) }
 }
 
-@available(watchOS 3.0, *)
 extension CKContainer: CloudKitContainer {
     public typealias DefaultType = CKContainer
     public typealias Database = CKDatabase
@@ -364,7 +351,6 @@ extension CKContainer: CloudKitContainer {
 
 // MARK: Database
 
-@available(watchOS 3.0, *)
 public protocol CloudKitDatabase {
     associatedtype FetchOperationType: CloudKitFetchRecordsOperation
     associatedtype PushOperationType: CloudKitModifyRecordsOperation
@@ -372,7 +358,6 @@ public protocol CloudKitDatabase {
     func addOperation(_ operation: CloudKitOperation)
 }
 
-@available(watchOS 3.0, *)
 extension CKDatabase: CloudKitDatabase {
     public typealias FetchOperationType = CKFetchRecordsOperation
     public typealias PushOperationType = CKModifyRecordsOperation
@@ -394,10 +379,8 @@ public protocol CloudKitOperation: AnyObject {
     func cancel()
 }
 
-@available(watchOS 3.0, *)
 extension CKDatabaseOperation: CloudKitOperation {}
 
-@available(watchOS 3.0, *)
 public protocol CloudKitModifyRecordsOperation: CloudKitOperation {
     
     init()
@@ -438,7 +421,6 @@ public protocol CloudKitModifyRecordsOperation: CloudKitOperation {
     
 }
 
-@available(watchOS 3.0, *)
 extension CloudKitModifyRecordsOperation {
     public init(recordsToSave: [CKRecord]?, recordIDsToDelete: [CKRecord.ID]?) {
         self.init()
@@ -447,5 +429,4 @@ extension CloudKitModifyRecordsOperation {
     }
 }
 
-@available(watchOS 3.0, *)
 extension CKModifyRecordsOperation: CloudKitModifyRecordsOperation {}
