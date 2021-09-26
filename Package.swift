@@ -20,7 +20,7 @@ let package = Package(
         .package(
             name: "CloudStorage",
             url: "https://github.com/AverageHelper/CloudStorage.git",
-            .upToNextMinor(from: "0.1.0")
+            .upToNextMinor(from: "0.1.3")
         ),
         .package(
             name: "CloudKitMocks",
